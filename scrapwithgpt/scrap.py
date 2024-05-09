@@ -11,7 +11,7 @@ from typing import Optional
 import json
 import os
 
-def smartscrap(url:str, desired_output:str=None, example_output:str=None, filtering_criteria:str=None, summarization:bool=True, full_website:bool=True, verbose:bool=None) -> Optional[str]:
+def smartscrap(url:str, desired_output:str=None, example_output:str=None, filtering_criteria:str=None, summarization:bool=True, full_website:bool=True, additional_consideration:str=None, verbose:bool=None) -> Optional[str]:
     """
     Main function to scrap a website.
 
@@ -20,6 +20,7 @@ def smartscrap(url:str, desired_output:str=None, example_output:str=None, filter
         - desired_output (str): A json like structure with the keys representing the information you want to find
         - filtering_criteria (str): A set of criteria the content must respect for the program to continue
         - summarization (bool): If you want also to output the summary of the website. True by default.
+        - additional_consideration (str): If you want to provide additional info to consider when generating the result. Ex: Info about your company.
 
     Returns:
         - The content or None if issue. The content will also be put in a file named "gptscrapper_url.txt" in the current dir. 
@@ -58,7 +59,7 @@ def smartscrap(url:str, desired_output:str=None, example_output:str=None, filter
             summary = ask_question_gpt(content, gen_role_summarizer(), max_tokens=MAX_TOKEN_OUTPUT_DEFAULT_HUGE,  verbose=False)
         
         if verbose: print(f"👷‍♂️ Using GPT 4 to  the requested data")  
-        result = ask_question_gpt4(content, gen_prompt_result(desired_output, example_output), max_tokens=MAX_TOKEN_GPT4_RESULT,  verbose=False)
+        result = ask_question_gpt4(content, gen_prompt_result(desired_output, example_output, additional_consideration), max_tokens=MAX_TOKEN_GPT4_RESULT,  verbose=False)
         if result:
             title = f"scrapwithgpt_{clean_url_to_filename(url)}.txt"
             if os.path.exists(title):

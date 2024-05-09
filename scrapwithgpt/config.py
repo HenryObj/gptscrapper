@@ -61,7 +61,7 @@ JSON_OUTPUT_VC = """{
   "Country": "string",
   "Number of investments": "integer",
   "Size of the fund": "string",
-  "One relevant company they invest in": "string",
+  "One relevant investment and why": "string",
   "Who to contact": {
     "Name": "string",
     "Position": "string",
@@ -77,8 +77,7 @@ JSON_EXAMPLE_VC = """{
   "Country": "USA",
   "Number of investments": "12",
   "Size of the fund": "$50M",
-  "Edtech info": "yes",
-  "One relevant company they invest in": "EduTech Innovators",
+  "One relevant investment and why": "EduTech Innovators - Innovate Ventures invested $200K in 2019. EduTech is relevant because X,Y,Z",
   "Who to contact": {
     "Name": "Jane Doe",
     "Position": "Investment Director",
@@ -86,5 +85,6 @@ JSON_EXAMPLE_VC = """{
     "Linkedin page": "https://www.linkedin.com/in/janedoe"
   },
   "Good reasons to contact them": "Innovate Ventures has a strong focus on Edtech, which aligns with our product. They also have a track record of supporting early-stage startups and can provide valuable mentorship and networks in the US market.",
-  "Useful Infos": "The fund recently increased its investment cap for Edtech startups and is actively seeking new innovative projects to finance."
+  "Useful Infos": "The fund recently increased its investment cap for Edtech startups and is actively seeking new innovative projects to finance. It mentioned that X and Y. It is noteworthy that Z."
 }"""
+

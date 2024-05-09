@@ -86,8 +86,10 @@ def clean_url_to_filename(url: str) -> str:
     """
     Convert URL to a suitable filename.
     """
-    file_name = urlparse(url).path
-    if file_name == "": file_name = "home_landing_none"
+    file_name = urlparse(url).netloc
+    if file_name == "":
+        file_name = url[url.find(".")+1: url.find(".",url.find(".")+1)]
+        if not file_name: file_name = url.replace("wwww","").replace("https://","").replace(".","")
     file_name = file_name.replace("/","_")
     file_name = file_name.replace("-","_")
     if file_name.startswith("_"): file_name = file_name[1:]

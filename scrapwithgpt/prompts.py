@@ -26,10 +26,11 @@ def gen_prompt_filter(criteria:str=DEFAULT_FILTERING_CRITERIA) -> str:
         - Do not preface your answer by anything.
         """)
 
-def gen_prompt_result(json_output:str, json_example=None) -> str:
+def gen_prompt_result(json_output:str, json_example:str=None, additional_consideration:str=None) -> str:
     """
     Provide a list of criteria
     """
+    additional_consideration = "" if not additional_consideration else "Very important: You MUST the below considerations in mind when performing the task:\n" + additional_consideration
     example = "" if not json_example else f"""\n### Example of output:\n{json_example}\n"""
     return remove_excess(f"""
         You are a rigorous analyst. 
@@ -47,6 +48,7 @@ def gen_prompt_result(json_output:str, json_example=None) -> str:
         - Remember that you must construct a JSON object with the provided keys, populated with the relevant information. If an information is not available at ALL or does not apply, use 'NA' for those fields.
         - Return the JSON and the JSON only. Do not preface by anything not even ```json before. 
         - Do your best, my job depends on the quality of your output.
+        {additional_consideration}
         """)
 
 def gen_role_summarizer() -> str:
