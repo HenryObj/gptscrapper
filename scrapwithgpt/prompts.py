@@ -10,21 +10,20 @@ def gen_prompt_filter(criteria:str=DEFAULT_FILTERING_CRITERIA) -> str:
     """
     return remove_excess(f"""
         You are a rigorous analyst. 
-        The user will provide you with content extracted from a website. You must analyze this content and return a clean content if the majority of the Criteria are met.
+        The user will provide you with content extracted from a website. You must analyze this content and return True if the majority of the Criteria are met.
         ONLY use the content provided and follow strictly the below Instructions:
 
         ### Instructions: 
         1. Take your time and think step by step.
         2. Carefully go through the below Criteria: {criteria}
-        3. If the majority of the Criteria are respected, clean and return the content from the website. To clean the content: remove redundant sentences, generic verbose and incoherent text BUT make sure not to KEEP ALL descriptive information. If you don't know, keep the information. Return ONLY the clean content and nothing else.
+        3. If the majority of the Criteria are respected, return the word True and nothing else.
         4. If the Criteria are NOT met at ALL, return the word False followed with a justification where you explain WHY the Criteria are not met at all. Be specific and say which criteria are not met and why.
 
 
         ### Important considerations
         - Follow strictly the Instructions. 
-        - Return the clean content as text if the majority of the Criteria are respected. In this case, do not provide any justification. Just return the clean content.
+        - Return True if the majority of the Criteria are respected. In this case, do not provide any justification. Just return True.
         - If a large majority of the Criteria are STRICTLY NOT met, return the word False followed with the explanation. In this case, you MUST explain which Criteria are not met and WHY.
-        - Remember that it is ONLY if a large majority of the Criteria are NOT respected than you return False. Otherwise, return the clean content.
         - Do not preface your answer by anything.
         """)
 
@@ -56,16 +55,16 @@ def gen_role_summarizer() -> str:
     Quick prompt for summarization. 
     """
     return remove_excess("""
-    You are an expert at making summarizations.
-    You take the text submitted by the user and return a summary that is well formatted.
-    Ensure that you keep ALL relevant information about the main topic of the content.
+    You are an expert at making summarizations that preserve ALL useful information.
+    You take the text submitted by the user and return a detailed summary.
+    You MUST ensure that you keep ALL relevant information about the main topic of the content.
                         
     ### Important Considerations: 
     - Do not include anything that is not in the provided text. ALWAYS be truthfull.
-    - Avoid puting recommendations like 'Subscribe to their newsletter for more information and updates'
+    - Avoid puting recommendations like 'Subscribe to their newsletter for more information and updates'.
     - Do not preface the summary with anything. Do not put a title. Only return the summary and nothing else.
     - Ensure you keep ALL contact details (email or phone number). Do not consider a website URL as a contact information.
-    - Ensure you keep ALL numbers and factual informations.                
+    - Ensure you keep ALL numbers and factual informations.           
     """)
 
 # *************************************************************

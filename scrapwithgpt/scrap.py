@@ -42,22 +42,23 @@ def smartscrap(url:str, desired_output:str=None, example_output:str=None, filter
             role_filter = gen_prompt_filter(filtering_criteria)
             buffer_tok = 16000 - calculate_token(json.dumps(role_filter)) - calculate_token(json.dumps(content))
             if buffer_tok < 4000:
-                print("The website content is too large for a single prompt - TBD chunking strat")
+                print("The website content is too large for a single prompt - TBD // TODO for Henry next version - chunking strat - END")
+                return ""
             else:
                 buffer_tok = max(min(buffer_tok, MAX_TOKEN_OUTPUT_GPT3), MAX_TOKEN_OUTPUT_DEFAULT_HUGE) # basically between 3K and 4K
-            filtered_content = ask_question_gpt(content, role_filter, max_tokens= buffer_tok, verbose=False)
-            if not filtered_content:
+            answer_from_filtergpt = ask_question_gpt(content, role_filter, max_tokens= buffer_tok, verbose=False)
+            if not answer_from_filtergpt:
                 if verbose: print("Couldn't check the Criteria - END")
                 return
-            elif "false" in filtered_content[:10].lower(): 
-                if verbose: print(f"The website is NOT relevant according to the Criteria. Response: {filtered_content} - END")
+            elif "false" in answer_from_filtergpt[:10].lower(): 
+                if verbose: print(f"The website is NOT relevant according to the Criteria. Response: {answer_from_filtergpt} - END")
                 return
         if summarization:
             if verbose: print(f"👷‍♂️ Generating a summary")   
-            summary = ask_question_gpt(filtered_content, gen_role_summarizer(), max_tokens=MAX_TOKEN_OUTPUT_DEFAULT_HUGE,  verbose=False)
+            summary = ask_question_gpt(content, gen_role_summarizer(), max_tokens=MAX_TOKEN_OUTPUT_DEFAULT_HUGE,  verbose=False)
         
         if verbose: print(f"👷‍♂️ Using GPT 4 to  the requested data")  
-        result = ask_question_gpt4(filtered_content, gen_prompt_result(desired_output, example_output), max_tokens=MAX_TOKEN_GPT4_RESULT,  verbose=False)
+        result = ask_question_gpt4(content, gen_prompt_result(desired_output, example_output), max_tokens=MAX_TOKEN_GPT4_RESULT,  verbose=False)
         if result:
             title = f"scrapwithgpt_{clean_url_to_filename(url)}.txt"
             if os.path.exists(title):
