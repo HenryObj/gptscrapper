@@ -1,10 +1,11 @@
 #   Main function to scrap the page according to the criteria specified.
 
 from .prompts import gen_prompt_filter, gen_prompt_result, gen_role_summarizer
-from .config import MAX_TOKEN_OUTPUT_DEFAULT_HUGE, JSON_EXAMPLE_VC, JSON_OUTPUT_VC, DEFAULT_FILTERING_CRITERIA, MAX_TOKEN_OUTPUT_GPT3
+from .config import MAX_TOKEN_OUTPUT_DEFAULT_HUGE, MAX_TOKEN_OUTPUT_GPT3, MAX_TOKEN_GPT4_RESULT
 from .web import crawl_website, fetch_content_url, clean_url_to_filename
+from .oai import ask_question_gpt, calculate_token, ask_question_gpt4
 from .utils import get_now, log_issue
-from .oai import ask_question_gpt, calculate_token
+
 
 from typing import Optional
 import json
@@ -55,8 +56,8 @@ def smartscrap(url:str, desired_output:str=None, example_output:str=None, filter
             if verbose: print(f"👷‍♂️ Generating a summary")   
             summary = ask_question_gpt(filtered_content, gen_role_summarizer(), max_tokens=MAX_TOKEN_OUTPUT_DEFAULT_HUGE,  verbose=False)
         
-        if verbose: print(f"👷‍♂️ Getting the requested data")  
-        result = ask_question_gpt(filtered_content, gen_prompt_result(desired_output, example_output), max_tokens=MAX_TOKEN_OUTPUT_DEFAULT_HUGE,  verbose=False)
+        if verbose: print(f"👷‍♂️ Using GPT 4 to  the requested data")  
+        result = ask_question_gpt4(filtered_content, gen_prompt_result(desired_output, example_output), max_tokens=MAX_TOKEN_GPT4_RESULT,  verbose=False)
         if result:
             title = f"scrapwithgpt_{clean_url_to_filename(url)}.txt"
             if os.path.exists(title):

@@ -41,13 +41,14 @@ def gen_prompt_result(json_output:str, json_example=None) -> str:
         ### Instructions: 
         1. Take your time and think step by step.
         2. Review and keep in mind ALL the fields of the below json structure: {json_output}
-        3. Go through the content provided by the user and fill the json accordingly. 
+        3. Go through the content provided by the user and try your best to fill the json accordingly. 
         4. If the information is NOT in the content AT ALL, put NA.
         {example}
         ### Important considerations:
         - Follow strictly the Instructions. 
         - Remember that you must construct a JSON object with the provided keys, populated with the relevant information. If an information is not available at ALL or does not apply, use 'NA' for those fields.
         - Return the JSON and the JSON only. Do not preface by anything not even ```json before. 
+        - Do your best, my job depends on the quality of your output.
         """)
 
 def gen_role_summarizer() -> str:
