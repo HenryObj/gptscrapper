@@ -10,7 +10,7 @@ from typing import Optional
 import json
 import os
 
-def scrap(url:str, desired_output:str=None, example_output:str=None, filtering_criteria:str=None, summarization:bool=True, full_website:bool=True, verbose:bool=None) -> Optional[str]:
+def smartscrap(url:str, desired_output:str=None, example_output:str=None, filtering_criteria:str=None, summarization:bool=True, full_website:bool=True, verbose:bool=None) -> Optional[str]:
     """
     Main function to scrap a website.
 
@@ -58,9 +58,9 @@ def scrap(url:str, desired_output:str=None, example_output:str=None, filtering_c
         if verbose: print(f"👷‍♂️ Getting the requested data")  
         result = ask_question_gpt(filtered_content, gen_prompt_result(desired_output, example_output), max_tokens=MAX_TOKEN_OUTPUT_DEFAULT_HUGE,  verbose=False)
         if result:
-            title = f"gptscrapper_{clean_url_to_filename(url)}.txt"
+            title = f"scrapwithgpt_{clean_url_to_filename(url)}.txt"
             if os.path.exists(title):
-                title = f"gptscrapper_{clean_url_to_filename(url)}_{get_now(True)}.txt" # To avoid overwriting
+                title = f"scrapwithgpt_{clean_url_to_filename(url)}_{get_now(True)}.txt" # To avoid overwriting
             if summary:
                 final_content = f"### SUMMARY of {url}:\n" + summary.replace(".", ".\n") + "\n\n" 
             final_content += f"### RESULT for {url}:\n" + result
@@ -71,10 +71,10 @@ def scrap(url:str, desired_output:str=None, example_output:str=None, filtering_c
             print("Failed to get the result data - END")
         return final_content
     except Exception as e:
-        log_issue(e, scrap, f"TBD - add the params here")
+        log_issue(e, smartscrap, f"TBD - add the params here")
 
 # *************************************************************
 test_url = "https://www.27v.vc"
 
 if __name__ == "__main__":
-    scrap(test_url, desired_output=JSON_OUTPUT_VC, example_output=JSON_EXAMPLE_VC, filtering_criteria=DEFAULT_FILTERING_CRITERIA, verbose=True)
+    smartscrap(test_url, desired_output=JSON_OUTPUT_VC, example_output=JSON_EXAMPLE_VC, filtering_criteria=DEFAULT_FILTERING_CRITERIA, verbose=True)

@@ -4,9 +4,9 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="gptscrapper",
+    name="scrapwithgpt",
     version="0.0.1", # need to increment this everytime otherwise Pypi will not accept the new version
-     url='https://github.com/HenryObj/gptscrapper',
+     url='https://github.com/HenryObj/scrapwithgpt',
     packages=find_packages(),
     install_requires=[
         "openai>=1.9.0",

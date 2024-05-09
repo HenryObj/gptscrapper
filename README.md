@@ -1,5 +1,5 @@
-# GPT Scraper
+# scrapwithgpt
 
-In your virtual environment, do "pip install gptscraper".
+In your virtual environment, do "pip install scrapwithgpt".
 Then --- INSTRUCTIONS TO BE WRITTEN
 
