@@ -74,7 +74,9 @@ def smartscrap(url:str, desired_output:str=None, example_output:str=None, filter
         log_issue(e, smartscrap, f"TBD - add the params here")
 
 # *************************************************************
-test_url = "https://www.27v.vc"
 
 if __name__ == "__main__":
-    smartscrap(test_url, desired_output=JSON_OUTPUT_VC, example_output=JSON_EXAMPLE_VC, filtering_criteria=DEFAULT_FILTERING_CRITERIA, verbose=True)
+    pass
+    # How to use
+    # test_url = "https://www.27v.vc"
+    #smartscrap(test_url, desired_output=JSON_OUTPUT_VC, example_output=JSON_EXAMPLE_VC, filtering_criteria=DEFAULT_FILTERING_CRITERIA, verbose=True)
