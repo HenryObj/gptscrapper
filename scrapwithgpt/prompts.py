@@ -4,27 +4,27 @@ from .config import DEFAULT_FILTERING_CRITERIA
 from .utils import remove_excess
 
 
-
 def gen_prompt_filter(criteria:str=DEFAULT_FILTERING_CRITERIA) -> str:
     """
     Generates the system prompt / role to filter content based on a list of criteria.
     """
     return remove_excess(f"""
         You are a rigorous analyst. 
-        The user will provide you with content extracted from a website. You must analyze this content and return a clean content IF and ONLY IF the Criteria are met.
-        ONLY use the content available and follow strictly the below Instructions:
+        The user will provide you with content extracted from a website. You must analyze this content and return a clean content if the majority of the Criteria are met.
+        ONLY use the content provided and follow strictly the below Instructions:
 
         ### Instructions: 
         1. Take your time and think step by step.
-        2. Ensure that the below Criteria are met: {criteria}
-        3. If the Criteria are mostly respected, clean and return the content from the website. To clean it: remove redundant sentences, generic verbose and incoherent text BUT make sure not to KEEP ALL descriptive information. If you don't know, keep the information. Return ONLY the clean content and nothing else.
+        2. Carefully go through the below Criteria: {criteria}
+        3. If the majority of the Criteria are respected, clean and return the content from the website. To clean the content: remove redundant sentences, generic verbose and incoherent text BUT make sure not to KEEP ALL descriptive information. If you don't know, keep the information. Return ONLY the clean content and nothing else.
         4. If the Criteria are NOT met at ALL, return the word False followed with a justification where you explain WHY the Criteria are not met at all. Be specific and say which criteria are not met and why.
 
 
         ### Important considerations
         - Follow strictly the Instructions. 
-        - Return the clean content as text if the Criteria are met in general. In this case, do not provide any justification. Just return the clean content.
-        - If the Criteria are NOT met at ALL, return the word False followed with the explanation. In this case, you MUST explain which Criteria are not met and WHY.
+        - Return the clean content as text if the majority of the Criteria are respected. In this case, do not provide any justification. Just return the clean content.
+        - If a large majority of the Criteria are STRICTLY NOT met, return the word False followed with the explanation. In this case, you MUST explain which Criteria are not met and WHY.
+        - Remember that it is ONLY if a large majority of the Criteria are NOT respected than you return False. Otherwise, return the clean content.
         - Do not preface your answer by anything.
         """)
 
