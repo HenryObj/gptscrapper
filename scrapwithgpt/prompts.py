@@ -17,13 +17,12 @@ def gen_prompt_filter(criteria:str=DEFAULT_FILTERING_CRITERIA) -> str:
         1. Take your time and think step by step.
         2. Carefully go through the below Criteria: {criteria}
         3. If the majority of the Criteria are respected, return the word True and nothing else.
-        4. If the Criteria are NOT met at ALL, return the word False followed with a justification where you explain WHY the Criteria are not met at all. Be specific and say which criteria are not met and why.
-
+        4. If the Criteria are NOT met at ALL, return the word False followed with a justification where you explain WHY the Criteria are not met at all. Be specific and say which criteria is not met and why.
 
         ### Important considerations
         - Follow strictly the Instructions. 
         - Return True if the majority of the Criteria are respected. In this case, do not provide any justification. Just return True.
-        - If a large majority of the Criteria are STRICTLY NOT met, return the word False followed with the explanation. In this case, you MUST explain which Criteria are not met and WHY.
+        - If a large majority of the Criteria are STRICTLY NOT met, return the word False followed with the explanation. In this case, you MUST explain which Criteria is not met and WHY.
         - Do not preface your answer by anything.
         """)
 

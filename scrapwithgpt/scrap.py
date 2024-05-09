@@ -1,7 +1,7 @@
 #   Main function to scrap the page according to the criteria specified.
 
+from .config import MAX_TOKEN_OUTPUT_DEFAULT_HUGE, MAX_TOKEN_OUTPUT_GPT3, MAX_TOKEN_GPT4_RESULT, MAX_TOKEN_WINDOW_GPT35_TURBO
 from .prompts import gen_prompt_filter, gen_prompt_result, gen_role_summarizer
-from .config import MAX_TOKEN_OUTPUT_DEFAULT_HUGE, MAX_TOKEN_OUTPUT_GPT3, MAX_TOKEN_GPT4_RESULT
 from .web import crawl_website, fetch_content_url, clean_url_to_filename
 from .oai import ask_question_gpt, calculate_token, ask_question_gpt4
 from .utils import get_now, log_issue
@@ -40,12 +40,12 @@ def smartscrap(url:str, desired_output:str=None, example_output:str=None, filter
         if filtering_criteria:
             if verbose: print(f"👷‍♂️ Checking if content matches criteria")
             role_filter = gen_prompt_filter(filtering_criteria)
-            buffer_tok = 16000 - calculate_token(json.dumps(role_filter)) - calculate_token(json.dumps(content))
-            if buffer_tok < 4000:
-                print("The website content is too large for a single prompt - TBD // TODO for Henry next version - chunking strat - END")
+            buffer_tok = MAX_TOKEN_WINDOW_GPT35_TURBO - calculate_token(role_filter) - calculate_token(content)
+            if buffer_tok < MAX_TOKEN_OUTPUT_GPT3-100: # Adding -100 as security
+                print(f"The website content is too large for a single prompt - remains only {buffer_tok} - TBD // TODO for Henry next version - chunking strat - END")
                 return ""
             else:
-                buffer_tok = max(min(buffer_tok, MAX_TOKEN_OUTPUT_GPT3), MAX_TOKEN_OUTPUT_DEFAULT_HUGE) # basically between 3K and 4K
+                buffer_tok = max(min(buffer_tok, MAX_TOKEN_OUTPUT_GPT3-100), MAX_TOKEN_OUTPUT_DEFAULT_HUGE) # basically between 3K and 4K
             answer_from_filtergpt = ask_question_gpt(content, role_filter, max_tokens= buffer_tok, verbose=False)
             if not answer_from_filtergpt:
                 if verbose: print("Couldn't check the Criteria - END")
