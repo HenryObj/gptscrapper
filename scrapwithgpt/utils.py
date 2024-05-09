@@ -86,6 +86,12 @@ def get_now(exact: bool = False) -> str:
     return datetime.datetime.strftime(now, "%d_%b_%Y@%Hh%Ms%S") if exact else datetime.datetime.strftime(now, "%d_%b_%Y")
 
 
+def is_valid_email(email):
+    '''
+    Not the best but a first regex protection.
+    '''
+    return bool(re.search(r"^[\w\.-]+@[\w\.-]+\.\w+$", email))
+
 # *************************************************************
 if __name__ == "__main__":
     pass

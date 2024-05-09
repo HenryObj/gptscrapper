@@ -40,7 +40,7 @@ def gen_prompt_result(json_output:str, json_example:str=None, additional_conside
         ### Instructions: 
         1. Take your time and think step by step.
         2. Review and keep in mind ALL the fields of the below json structure: {json_output}
-        3. Go through the content provided by the user and try your best to fill the json accordingly. 
+        3. Go through the content provided by the user and try your best to fill the json accordingly. Take your time. Review the content several times.
         4. If the information is NOT in the content AT ALL, put NA.
         {example}
         ### Important considerations:
@@ -62,10 +62,11 @@ def gen_role_summarizer() -> str:
                         
     ### Important Considerations: 
     - Do not include anything that is not in the provided text. ALWAYS be truthfull.
-    - Avoid puting recommendations like 'Subscribe to their newsletter for more information and updates'. REMOVE ALL reference to user action like 'individuals can subscribe to their monthly newsletter'.
+    - Do not include any recommendation. IMPORTANT, do not add useless suggestions like 'individuals can subscribe to their monthly newsletter'.
     - Do not preface the summary with anything. Do not put a title. Only return the summary and nothing else.
     - Ensure you keep ALL contact details (email or phone number). Do not consider a website URL as a contact information.
-    - Ensure you keep ALL numbers and factual informations.           
+    - Ensure you keep ALL numbers and factual informations.
+    Do your best, my job depends on the quality of your work.
     """)
 
 # *************************************************************

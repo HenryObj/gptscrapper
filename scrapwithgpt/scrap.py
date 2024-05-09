@@ -57,10 +57,10 @@ def smartscrap(url:str, desired_output:str=None, example_output:str=None, filter
                 if verbose: print(f"The website is NOT relevant according to the Criteria. Response: {answer_from_filtergpt} - END")
                 return
         if summarization:
-            if verbose: print(f"👷‍♂️ Generating a summary")   
+            if verbose: print(f"👷‍♂️ Generating a summary of the website content")   
             summary = ask_question_gpt(content, gen_role_summarizer(), max_tokens=MAX_TOKEN_OUTPUT_DEFAULT_HUGE,  verbose=False)
         
-        if verbose: print(f"👷‍♂️ Using GPT 4 to  the requested data")  
+        if verbose: print(f"👷‍♂️ Using GPT 4 to get the requested data")  
         result = ask_question_gpt4(content, gen_prompt_result(desired_output, example_output, additional_consideration), max_tokens=MAX_TOKEN_GPT4_RESULT,  verbose=False)
         if result:
             title = f"scrapwithgpt_{clean_url_to_filename(url)}.txt"

@@ -2,7 +2,7 @@
 
 
 from .config import HEADERS, HTTP_URL_PATTERN
-from .utils import log_issue, remove_excess, remove_non_printable
+from .utils import log_issue, remove_excess, remove_non_printable, is_valid_email
 
 
 from urllib.parse import urlparse, urlunparse, quote, unquote
@@ -141,6 +141,7 @@ def crawl_website(url: str, how_many_pages = 30, memory_store = None) -> dict:
     local_domain = urlparse(url).netloc 
     queue = deque([url])
     seen = set([url])
+    linkedin, emails = [], []
     with concurrent.futures.ThreadPoolExecutor() as executor:
         while queue:
             url = queue.pop()
@@ -156,25 +157,42 @@ def crawl_website(url: str, how_many_pages = 30, memory_store = None) -> dict:
             if submitted == how_many_pages:
                 break
             future.add_done_callback(lambda future: wrap_handle_fetch_result(future, data_name, memory_store))
-            for link in fetch_domain_links(local_domain, url):
+            links_contact = fetch_domain_links_and_contact(local_domain, url)
+            linkedin += links_contact["linkedin"]
+            emails += links_contact["emails"]
+            for link in links_contact["links"]:
                 if link not in seen:
                     queue.append(link)
                     seen.add(link)
+    # Adding linkedin and emails info at the beginning
+    linkedin = list(set(linkedin))
+    if linkedin: 
+        linkedin = ", ".join(str(elem) for elem in linkedin)
+        dict_linkedin = {"linkedin_found": linkedin}
+        memory_store = {**dict_linkedin, **memory_store}
+    emails = list(set(emails))
+    if emails: 
+        emails = ", ".join(str(elem) for elem in emails)
+        dict_emails = {"email_found": emails}
+        memory_store = {**dict_emails, **memory_store}
     return memory_store
 
-def fetch_hyperlinks(url: str) -> list[str]:
-    """
-    Fetch and returns all hyperlinks from a given URL, filtering out non-HTML content and irrelevant links.
 
-    Returns a list with all the useful links present in a page.
+def fetch_hyperlinks_and_contact(url: str) -> dict:
     """
+    Fetch and returns all hyperlinks, emails, and linkeding profile from a given URL, filtering out non-HTML content and irrelevant links.
+
+    Returns a dict with the following structure:
+        {"links":[], "emails":[], "linkedin":[]}
+    """
+    result = {"links":[], "emails":[], "linkedin":[]}
     try:
         response = requests.get(url, headers=HEADERS)
         if not response.headers.get('Content-Type', '').startswith('text/html'):
             return []
         html = response.text
     except Exception as e:
-        log_issue(e, fetch_hyperlinks, f"Couldn't fetch the links of url {url}")
+        log_issue(e, fetch_hyperlinks_and_contact, f"Couldn't fetch the links of url {url}")
         return []
 
     soup = BeautifulSoup(html, 'html.parser')
@@ -183,7 +201,10 @@ def fetch_hyperlinks(url: str) -> list[str]:
     filtered_links = [link for link in links if not (
         link.startswith(('javascript:', 'mailto:', '#')) or '://' not in link and not link.startswith('/')
     )]
-    return filtered_links
+    result["links"] = filtered_links
+    result["emails"] = get_emails_from_soup(soup)
+    result["linkedin"] = get_linkedin_profiles_from_soup(soup)
+    return result
 
 # Fetch URL - works as a standalone
 # Might want to test the driver version with selenium - driver = webdriver.Firefox()
@@ -215,6 +236,48 @@ def fetch_content_url(url: str, attempt: int = 0) -> Optional[str]:
         log_issue(e, fetch_content_url, f"For url {url}")
         return None
 
+def get_emails_from_soup(soup, domain, dom_only = True) -> list:
+    """
+    Function to extract all email addresses from the soup object.
+    The function looks in the text of the soup.
+    
+    Args:
+        soup (bs4.BeautifulSoup): BeautifulSoup object to search.
+        domain (str): Domain to restrict the emails to.
+        dom_only (bool): If True, restricts search to @domain emails only. If False, searches all emails.
+        
+    Returns:
+        list: List of unique emails found. Can be empty.
+    """
+    if dom_only:
+        emails = re.findall(r'\b[A-Za-z0-9._%+-]+@'+domain+r'\b', soup.get_text(), flags=re.IGNORECASE)
+    else:
+        emails = re.findall(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', soup.get_text(), flags=re.IGNORECASE)
+    
+    # Convert emails to lowercase and ensures it is a valid email
+    valid_emails = [email.lower() for email in emails if is_valid_email(email)]
+    return list(set(valid_emails))  # Remove potential duplicates
+
+def get_linkedin_profiles_from_soup(soup) -> list:
+    """
+    Function to extract all LinkedIn profile links from the soup object.
+    The function looks for href attributes within 'a' tags in the HTML.
+    
+    Args:
+        soup (bs4.BeautifulSoup): BeautifulSoup object to search.
+        
+    Returns:
+        list: List of unique LinkedIn profile links found. Can be empty.
+    """
+    linkedin_urls = set()
+    for a_tag in soup.find_all('a', href=True):
+        href = a_tag['href']
+        # Regular expression to match LinkedIn profile URLs
+        if re.search(r'https?://www\.linkedin\.com/in/[^/]+/?$', href):
+            linkedin_urls.add(href)
+
+    return list(linkedin_urls)
+
 def is_useful_link(tag) -> bool:
     """
     Mini function to check if a link is surrounded with content, hence useful, or alone.
@@ -235,17 +298,22 @@ def is_useful_link(tag) -> bool:
             return True
     return False
 
-def fetch_domain_links(local_domain, url) -> set:
+def fetch_domain_links_and_contact(local_domain, url) -> set:
     """
-    Returns the list of all unique urls of a given domain. Search start from a specific page (url).
+    Returns the list of all unique urls of a given domain and the related contact info of the page. Search start from a specific page (url).
     Doesn't return links that are not part of the domain.
+    
+    Returns:
+        (dict) with the following structure {"links":[], "emails":[], "linkedin":[]}
     """
     clean_links = set()
     try:
-        raw_links = fetch_hyperlinks(url)
+        result = fetch_hyperlinks_and_contact(url)
+        raw_links = result["links"]
         if raw_links is None:
-            print("No hyperlink", fetch_domain_links, f"For {url} and {local_domain}")
-            return []
+            log_issue("No hyperlink", fetch_domain_links_and_contact, f"For {url} and {local_domain}")
+            result["links"] = []
+            return result
         for link in set(raw_links):
             if link is None:
                 continue
@@ -268,9 +336,9 @@ def fetch_domain_links(local_domain, url) -> set:
                     valid_link = valid_link[:-1]
                 clean_links.add(valid_link)
     except Exception as e:
-        log_issue(e, fetch_domain_links, f"For {url} and {local_domain}")
-    return clean_links
-
+        log_issue(e, fetch_domain_links_and_contact, f"For {url} and {local_domain}")
+    result["links"] = clean_links
+    return result
 
 def remove_citations(soup: BeautifulSoup) -> BeautifulSoup:
     """
