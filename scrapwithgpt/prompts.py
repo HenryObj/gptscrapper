@@ -39,15 +39,16 @@ def gen_prompt_result(json_output:str, json_example:str=None, additional_conside
 
         ### Instructions: 
         1. Take your time and think step by step.
-        2. Review and keep in mind ALL the fields of the below json structure: {json_output}
-        3. Go through the content provided by the user and try your best to fill the json accordingly. Take your time. Review the content several times.
-        4. If the information is NOT in the content AT ALL, put NA.
+        2. Take note of ALL the fields of the below JSON structure: {json_output}
+        3. Go through the content provided by the user and try your best to fill the JSON accordingly. Take your time. Review the content several times.
+        4. If the information is NOT in the content, put NA.
         {example}
         ### Important considerations:
         - Follow strictly the Instructions. 
-        - Remember that you must construct a JSON object with the provided keys, populated with the relevant information. If an information is not available at ALL or does not apply, use 'NA' for those fields.
+        - You must construct a JSON object with the provided keys, populated with the relevant information. 
+        - If an information is not available at ALL or does not apply, use 'NA' for those fields. Do not invent anything. ALWAYS be truthful.
         - Return the JSON and the JSON only. Do not preface by anything not even ```json before. 
-        - Do your best, my job depends on the quality of your output.
+        - Do your utmost best! My job depends on the quality of your output!
         {additional_consideration}
         """)
 

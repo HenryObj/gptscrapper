@@ -61,6 +61,7 @@ JSON_OUTPUT_VC = """{
   "Country": "string",
   "Number of investments": "integer",
   "Size of the fund": "string",
+  "Ticket size": "string",
   "One relevant investment to us and why": "string",
   "Who to contact": {
     "Name": "string",
@@ -77,6 +78,7 @@ JSON_EXAMPLE_VC = """{
   "Country": "USA",
   "Number of investments": "12",
   "Size of the fund": "$50M",
+  "Ticket size": "$100K to $250K with follow up",
   "One relevant investment to us and why": "EduTech Innovators - Innovate Ventures invested $200K in 2019. EduTech is relevant because your company does X and EduTech does Y which has synergy with your company on A/B/C.",
   "Who to contact": {
     "Name": "Jane Doe",
