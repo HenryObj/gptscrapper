@@ -236,24 +236,18 @@ def fetch_content_url(url: str, attempt: int = 0) -> Optional[str]:
         log_issue(e, fetch_content_url, f"For url {url}")
         return None
 
-def get_emails_from_soup(soup, domain, dom_only = True) -> list:
+def get_emails_from_soup(soup) -> list:
     """
     Function to extract all email addresses from the soup object.
     The function looks in the text of the soup.
     
     Args:
         soup (bs4.BeautifulSoup): BeautifulSoup object to search.
-        domain (str): Domain to restrict the emails to.
-        dom_only (bool): If True, restricts search to @domain emails only. If False, searches all emails.
         
     Returns:
         list: List of unique emails found. Can be empty.
     """
-    if dom_only:
-        emails = re.findall(r'\b[A-Za-z0-9._%+-]+@'+domain+r'\b', soup.get_text(), flags=re.IGNORECASE)
-    else:
-        emails = re.findall(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', soup.get_text(), flags=re.IGNORECASE)
-    
+    emails = re.findall(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', soup.get_text(), flags=re.IGNORECASE)
     # Convert emails to lowercase and ensures it is a valid email
     valid_emails = [email.lower() for email in emails if is_valid_email(email)]
     return list(set(valid_emails))  # Remove potential duplicates
