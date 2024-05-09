@@ -44,8 +44,9 @@ def smartscrap(url:str, desired_output:str=None, example_output:str=None, filter
             role_filter = gen_prompt_filter(filtering_criteria)
             buffer_tok = MAX_TOKEN_WINDOW_GPT35_TURBO - calculate_token(role_filter) - calculate_token(content)
             if buffer_tok < MAX_TOKEN_OUTPUT_GPT3-100: # Adding -100 as security
-                print(f"The website content is too large for a single prompt - remains only {buffer_tok} - TBD // TODO for Henry next version - chunking strat - END")
-                return ""
+                print(f"The website content is too large for a single prompt - remains only {buffer_tok}\nTBD // TODO for Henry next version\nFor now we will take a subset of the content\n🔴 Information might be missing!")
+                safe_removal = int((MAX_TOKEN_OUTPUT_GPT3 - buffer_tok) * 4) * 1.362 # Adding 36% buffer on top
+                content = content[:-safe_removal]
             else:
                 buffer_tok = max(min(buffer_tok, MAX_TOKEN_OUTPUT_GPT3-100), MAX_TOKEN_OUTPUT_DEFAULT_HUGE) # basically between 3K and 4K
             answer_from_filtergpt = ask_question_gpt(content, role_filter, max_tokens= buffer_tok, verbose=False)
