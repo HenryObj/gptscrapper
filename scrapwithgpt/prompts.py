@@ -62,7 +62,7 @@ def gen_role_summarizer() -> str:
                         
     ### Important Considerations: 
     - Do not include anything that is not in the provided text. ALWAYS be truthfull.
-    - Avoid puting recommendations like 'Subscribe to their newsletter for more information and updates'.
+    - Avoid puting recommendations like 'Subscribe to their newsletter for more information and updates'. REMOVE ALL reference to user action like 'individuals can subscribe to their monthly newsletter'.
     - Do not preface the summary with anything. Do not put a title. Only return the summary and nothing else.
     - Ensure you keep ALL contact details (email or phone number). Do not consider a website URL as a contact information.
     - Ensure you keep ALL numbers and factual informations.           

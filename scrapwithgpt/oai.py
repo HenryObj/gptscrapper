@@ -114,14 +114,13 @@ def request_chatgpt(current_chat: list, max_tokens: int, stop_list=False, max_at
                 stop=stop,
                 model=model,
             )
-            print(response)
             rep = response.choices[0].message.content
             rep = rep.strip()
             valid = True
         except Exception as e:
             attempts += 1
     if not rep:
-        print("We didn't get a reply")
+        print(f"We didn't get a reply despite {attempts} attempts")
     return rep
 
 

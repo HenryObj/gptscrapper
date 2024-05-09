@@ -8,7 +8,7 @@ from .utils import get_now, log_issue
 
 
 from typing import Optional
-import json
+import time
 import os
 
 def smartscrap(url:str, desired_output:str=None, example_output:str=None, filtering_criteria:str=None, summarization:bool=True, full_website:bool=True, additional_consideration:str=None, verbose:bool=None) -> Optional[str]:
@@ -29,6 +29,7 @@ def smartscrap(url:str, desired_output:str=None, example_output:str=None, filter
     full_website is True by default. We scrap the full website up to 30 pages by default. Put it to False if you want to scrap ONLY the page.
     Change the crawl_website params to scrap more (or less) pages
     """
+    start = time.time()
     try:
         final_content, summary = "", ""
         if full_website:
@@ -69,7 +70,7 @@ def smartscrap(url:str, desired_output:str=None, example_output:str=None, filter
             final_content += f"### RESULT for {url}:\n" + result
             with open(title, "w") as file:
                 file.write(final_content)
-            if verbose: print(f"✅ Done - The content is in {title}")
+            if verbose: print(f"✅ Done - The content is in {title} and was obtained in {round(time.time()-start, 1)} seconds 👌")
         else:
             print("Failed to get the result data - END")
         return final_content
