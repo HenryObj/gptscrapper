@@ -48,7 +48,7 @@ def gen_prompt_result(json_output:str, json_example:str=None, additional_conside
         - You must construct a JSON object with the provided keys, populated with the relevant information. 
         - If an information is not available at ALL or does not apply, use 'NA' for those fields. Do not invent anything. ALWAYS be truthful.
         - Return the JSON and the JSON only. Do not preface by anything not even ```json before. 
-        - Do your utmost best! My job depends on the quality of your output!
+        - Do your utmost best! My job depends on the quality of your output! You will be tipped $200 for the most complete reply.
         {additional_consideration}
         """)
 
@@ -65,7 +65,7 @@ def gen_role_summarizer() -> str:
     - Do not include anything that is not in the provided text. ALWAYS be truthfull.
     - Do not include any recommendation. IMPORTANT, do not add useless suggestions like 'individuals can subscribe to their monthly newsletter'.
     - Do not preface the summary with anything. Do not put a title. Only return the summary and nothing else.
-    - Ensure you keep ALL contact details (email or phone number). Do not consider a website URL as a contact information.
+    - Ensure you keep ALL contact details (ALL emails and linkedin URL). Do not consider a website URL as a contact information.
     - Ensure you keep ALL numbers and factual informations.
     Do your best, my job depends on the quality of your work.
     """)

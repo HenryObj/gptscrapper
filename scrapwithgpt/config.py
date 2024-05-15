@@ -47,12 +47,12 @@ MAX_TOKEN_OUTPUT_GPT3 = 4096
 DEFAULT_FILTERING_CRITERIA = """
 ### Criteria ###
 The VC fund / investor should:
-a. Primarily invest in companies at early stages (pre-revenue or very early revenues).
+a. Primarily invest in companies at early stages (pre-revenue or early revenues).
 b. Invest in startups with a valuation of approximately $3M to $15M. Check that the fund does NOT typically invest small amounts for disproportionately large equity. For example investing $100K against 10% of equity.
-c. Have already invested in Edtech. The VC fund / investor should have experience with SaaS and AI.
+c. The VC fund / investor should have experience with SaaS, Edtech or AI.
 d. Not finance companies that are direct competitors in the space of 'training with simulation of interaction with fake clients'.
-e. Have made at least 5-10 investments.
-f. Be located in the US or the GCC (Gulf Cooperation Council) countries.
+e. Have made at least 5 investments.
+f. The fund is located in the US or the GCC (Gulf Cooperation Council) countries.
 ### end of the Criteria ###
 """
 

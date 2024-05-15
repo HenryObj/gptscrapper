@@ -28,6 +28,8 @@ def smartscrap(url:str, desired_output:str=None, example_output:str=None, filter
     Note:    
     full_website is True by default. We scrap the full website up to 30 pages by default. Put it to False if you want to scrap ONLY the page.
     Change the crawl_website params to scrap more (or less) pages
+
+    Model currently used is "gpt-4o" - TBD have it as a param - quick fix for now
     """
     start = time.time()
     try:
@@ -49,7 +51,7 @@ def smartscrap(url:str, desired_output:str=None, example_output:str=None, filter
                 content = content[:-safe_removal]
             else:
                 buffer_tok = max(min(buffer_tok, MAX_TOKEN_OUTPUT_GPT3-100), MAX_TOKEN_OUTPUT_DEFAULT_HUGE) # basically between 3K and 4K
-            answer_from_filtergpt = ask_question_gpt(content, role_filter, max_tokens= buffer_tok, verbose=False)
+            answer_from_filtergpt = ask_question_gpt(content, role_filter, model="gpt-4o", max_tokens= buffer_tok, verbose=False)
             if not answer_from_filtergpt:
                 if verbose: print("Couldn't check the Criteria - END")
                 return
@@ -58,7 +60,7 @@ def smartscrap(url:str, desired_output:str=None, example_output:str=None, filter
                 return
         if summarization:
             if verbose: print(f"👷‍♂️ Generating a summary of the website content")   
-            summary = ask_question_gpt(content, gen_role_summarizer(), max_tokens=MAX_TOKEN_OUTPUT_DEFAULT_HUGE,  verbose=False)
+            summary = ask_question_gpt(content, gen_role_summarizer(), model="gpt-4o", max_tokens=MAX_TOKEN_OUTPUT_DEFAULT_HUGE,  verbose=False)
         
         if verbose: print(f"👷‍♂️ Using GPT 4 to get the requested data")  
         result = ask_question_gpt4(content, gen_prompt_result(desired_output, example_output, additional_consideration), max_tokens=MAX_TOKEN_GPT4_RESULT,  verbose=False)
